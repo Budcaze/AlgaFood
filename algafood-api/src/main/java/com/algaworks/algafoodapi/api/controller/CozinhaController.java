@@ -1,8 +1,11 @@
 package com.algaworks.algafoodapi.api.controller;
 
 import com.algaworks.algafoodapi.api.model.CozinhasXmlWrapper;
+import com.algaworks.algafoodapi.domain.exception.EntidadeEmUsoException;
+import com.algaworks.algafoodapi.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafoodapi.domain.model.Cozinha;
 import com.algaworks.algafoodapi.domain.repository.CozinhaRepository;
+import com.algaworks.algafoodapi.domain.service.CadastroCozinhaService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -18,11 +21,12 @@ import java.util.List;
 @RequestMapping("/cozinhas")//Posso adicionar o MediaType.APPLICATION_JSON_VALUE na classe toda. é só atribuir o (value = "/cozinha, produces = ")
 public class CozinhaController {
 
-
+    private CadastroCozinhaService cadastroCozinha;
     private CozinhaRepository cozinhaRepository;
     @Autowired
-    public CozinhaController(CozinhaRepository cozinhaRepository) {
+    public CozinhaController(CozinhaRepository cozinhaRepository, CadastroCozinhaService cadastroCozinha) {
         this.cozinhaRepository = cozinhaRepository;
+        this.cadastroCozinha = cadastroCozinha;
     }
 
     @GetMapping(/*produces = MediaType.APPLICATION_JSON_VALUE*/)//Faz o metodo só retornar em Json
@@ -44,7 +48,7 @@ public class CozinhaController {
     @PostMapping//Adicionar item na cozinha. O post serve pra Adicionar
     @ResponseStatus(HttpStatus.CREATED)//Altera o Status HTTP pra 201
     public Cozinha adicionar(@RequestBody Cozinha cozinha){
-         return cozinhaRepository.salvar(cozinha);
+         return cadastroCozinha.salvar(cozinha);
     }
     @PutMapping("/{cozinhaId}")
     public ResponseEntity<Cozinha> atualizar(@PathVariable Long cozinhaId, @RequestBody Cozinha cozinha){
@@ -60,17 +64,15 @@ public class CozinhaController {
     @DeleteMapping("/{cozinhaId}")
     public ResponseEntity<Cozinha> remover(@PathVariable Long cozinhaId){
         try {
-            Cozinha cozinhaAtual = cozinhaRepository.buscar(cozinhaId);
-            if(cozinhaAtual != null){
-                cozinhaRepository.remover(cozinhaAtual);
-                return ResponseEntity.noContent().build();// Fala que deu status ok mas não me retorna um corpo. Protocolo 204
-            }
-            return ResponseEntity.notFound().build();
-        }catch (DataIntegrityViolationException e){
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();//Isso é pra tratar a Violação dee Integridade do Banco de dados
+            cadastroCozinha.excluir(cozinhaId);
+            return ResponseEntity.noContent().build();
+
+        }catch (EntidadeNaoEncontradaException e){
+            return ResponseEntity.notFound().build();//Significa que ele não achou a cozinha pra remover
+
+        }catch (EntidadeEmUsoException e){
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
-
-
 
     }
 
