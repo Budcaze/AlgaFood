@@ -56,7 +56,7 @@ public class CozinhaController {
         if(cozinhaAtual != null){
             //cozinhaAtual.setNome(cozinha.getNome()); Não é a melhor forma, já que se tivesse 10 atributos teria que fazer 10 setters
             BeanUtils.copyProperties(cozinha, cozinhaAtual, "id"); //Já esse metodo copia todas os atibutos de cozinha e joga em cozinhaAtual
-            cozinhaAtual = cozinhaRepository.salvar(cozinhaAtual);
+            cozinhaAtual = cadastroCozinha.salvar(cozinhaAtual);
             return ResponseEntity.ok(cozinhaAtual);
         }
         return ResponseEntity.notFound().build();//Me retorna 404
