@@ -1,5 +1,6 @@
 package com.algaworks.algafoodapi.api.controller;
 
+import com.algaworks.algafoodapi.domain.exception.EntidadeEmUsoException;
 import com.algaworks.algafoodapi.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafoodapi.domain.model.Estado;
 import com.algaworks.algafoodapi.domain.repository.EstadoRepository;
@@ -55,6 +56,18 @@ public class EstadoController {
             return ResponseEntity.notFound().build();
         }catch (EntidadeNaoEncontradaException e){
             return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/{estadoId}")
+    public ResponseEntity<Estado> remover(@PathVariable Long estadoId){
+        try{
+            cadastroEstado.excluir(estadoId);
+            return ResponseEntity.noContent().build();//Significa um 204 ou seja, um bem sucedido que retorna nada
+        }catch (EntidadeNaoEncontradaException e){
+            return ResponseEntity.notFound().build();
+        }catch (EntidadeEmUsoException e){
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
     }
 }

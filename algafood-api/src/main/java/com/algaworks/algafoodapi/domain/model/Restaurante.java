@@ -21,7 +21,7 @@ public class Restaurante {
     @Column(name = "taxa_frete", nullable = false)//Faz não aceitar nulo
     private BigDecimal taxaFrete;
     @ManyToOne
-    @JoinColumn(name = "cozinha_id")//Caso eu queira alterar o nome
+    @JoinColumn(name = "cozinha_id", nullable = false)//Caso eu queira alterar o nome
     private Cozinha cozinha;
 
 }
