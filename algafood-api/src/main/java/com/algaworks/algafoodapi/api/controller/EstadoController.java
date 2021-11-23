@@ -60,14 +60,14 @@ public class EstadoController {
     }
 
     @DeleteMapping("/{estadoId}")
-    public ResponseEntity<Estado> remover(@PathVariable Long estadoId){
+    public ResponseEntity<?> remover(@PathVariable Long estadoId){
         try{
             cadastroEstado.excluir(estadoId);
             return ResponseEntity.noContent().build();//Significa um 204 ou seja, um bem sucedido que retorna nada
         }catch (EntidadeNaoEncontradaException e){
             return ResponseEntity.notFound().build();
         }catch (EntidadeEmUsoException e){
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }
     }
 }
