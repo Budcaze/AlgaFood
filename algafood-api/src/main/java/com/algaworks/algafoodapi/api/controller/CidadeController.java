@@ -41,20 +41,38 @@ public class CidadeController {
     }
     @PostMapping//Adicionar item na cozinha. O post serve pra Adicionar
     @ResponseStatus(HttpStatus.CREATED)//Altera o Status HTTP pra 201
-    public Cidade adicionar(@RequestBody Cidade cidade){
-        return cadastroCidade.salvar(cidade);
+    public ResponseEntity<?> adicionar(@RequestBody Cidade cidade){
+        try{
+            cadastroCidade.salvar(cidade);
+            return ResponseEntity.status(HttpStatus.CREATED).body(cidade);
+        }catch (EntidadeNaoEncontradaException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+
     }
 
     @PutMapping("/{cidadeId}")
-    public ResponseEntity<Cidade> atualizar(@PathVariable Long cidadeId, @RequestBody Cidade cidade){
-        Optional<Cidade> cidadeAtual = cidadeRepository.findById(cidadeId);
-        if(cidadeAtual.isPresent()){
-            //cozinhaAtual.setNome(cozinha.getNome()); Não é a melhor forma, já que se tivesse 10 atributos teria que fazer 10 setters
-            BeanUtils.copyProperties(cidade, cidadeAtual.get(), "id"); //Já esse metodo copia todas os atibutos de cozinha e joga em cozinhaAtual
-           Cidade cidadeSalva = cadastroCidade.salvar(cidadeAtual.get());
-            return ResponseEntity.ok(cidadeSalva);
+    public ResponseEntity<?> atualizar(@PathVariable Long cidadeId,
+                                       @RequestBody Cidade cidade) {
+        try {
+            // Podemos usar o orElse(null) também, que retorna a instância de cidade
+            // dentro do Optional, ou null, caso ele esteja vazio,
+            // mas nesse caso, temos a responsabilidade de tomar cuidado com NullPointerException
+            Cidade cidadeAtual = cidadeRepository.findById(cidadeId).orElse(null);
+
+            if (cidadeAtual != null) {
+                BeanUtils.copyProperties(cidade, cidadeAtual, "id");
+
+                cidadeAtual = cadastroCidade.salvar(cidadeAtual);
+                return ResponseEntity.ok(cidadeAtual);
+            }
+
+            return ResponseEntity.notFound().build();
+
+        } catch (EntidadeNaoEncontradaException e) {
+            return ResponseEntity.badRequest()
+                    .body(e.getMessage());
         }
-        return ResponseEntity.notFound().build();//Me retorna 404
     }
     @DeleteMapping("/{cidadeId}")
     public ResponseEntity<Cidade> remover(@PathVariable Long cidadeId){

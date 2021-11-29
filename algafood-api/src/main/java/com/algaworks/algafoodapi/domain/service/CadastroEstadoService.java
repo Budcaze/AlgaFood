@@ -16,21 +16,14 @@ import java.util.Optional;
 @Service
 public class CadastroEstadoService {
     private EstadoRepository estadoRepository;
-    private CidadeRepository cidadeRepository;
+
     @Autowired
-    public CadastroEstadoService(EstadoRepository estadoRepository, CidadeRepository cidadeRepository) {
+    public CadastroEstadoService(EstadoRepository estadoRepository) {
         this.estadoRepository = estadoRepository;
-        this.cidadeRepository = cidadeRepository;
     }
 
     public Estado salvar(Estado estado){
-        Long cidadeId = estado.getCidade().getId();
-        Optional<Cidade> cidade = cidadeRepository.findById(cidadeId);
-        if(cidade.isPresent()){
-            estado.setCidade(cidade.get());
-            return estadoRepository.save(estado);
-        }
-        throw new EntidadeNaoEncontradaException(String.format("Não existe cadastro de cidade com código %d", cidadeId));
+         return estadoRepository.save(estado);
     }
 
     public void excluir(Long estadoId){

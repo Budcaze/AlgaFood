@@ -15,6 +15,5 @@ public class Estado {
     private Long id;
     @Column(nullable = false)
     private String nome;
-    @ManyToOne
-    private Cidade cidade;
+
 }

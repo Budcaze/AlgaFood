@@ -15,7 +15,7 @@ public class Cidade {
     private Long id;
     private String nome;
 
-//    @ManyToOne
-//    @JoinColumn(nullable = false)
-//    private Estado estado;
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    private Estado estado;
 }

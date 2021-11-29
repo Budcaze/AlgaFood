@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/estados")
@@ -26,37 +27,35 @@ public class EstadoController {
     }
     @GetMapping
     public List<Estado> listar(){
-        return estadoRepository.listar();
+        return estadoRepository.findAll();
     }
     @GetMapping("/{estadoId}")
     public ResponseEntity<Estado> buscar(@PathVariable Long estadoId){
-        Estado estado = estadoRepository.buscar(estadoId);
-        if (estado != null){
-            return ResponseEntity.ok(estado);
+        Optional<Estado> estado = estadoRepository.findById(estadoId);
+        if (estado.isPresent()){
+            return ResponseEntity.ok(estado.get());
         }
        return ResponseEntity.notFound().build();
     }
     @PostMapping
-    public ResponseEntity<?> adicionar(@RequestBody Estado estado){
-        try {
-            return ResponseEntity.status(HttpStatus.CREATED).body(cadastroEstado.salvar(estado));
-        }catch (EntidadeNaoEncontradaException e){
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    @ResponseStatus(HttpStatus.CREATED)
+    public Estado adicionar(@RequestBody Estado estado) {
+        return cadastroEstado.salvar(estado);
     }
 
     @PutMapping("/{estadoId}")
-    public ResponseEntity<?> atualizar(@PathVariable Long estadoId, @RequestBody Estado estado){
-        try {
-            Estado estadoAtual = estadoRepository.buscar(estadoId);
-            if (estadoAtual != null){
-                BeanUtils.copyProperties(estado, estadoAtual, "id");
-               return ResponseEntity.ok(cadastroEstado.salvar(estadoAtual));
-            }
-            return ResponseEntity.notFound().build();
-        }catch (EntidadeNaoEncontradaException e){
-            return ResponseEntity.badRequest().body(e.getMessage());
+    public ResponseEntity<Estado> atualizar(@PathVariable Long estadoId,
+                                            @RequestBody Estado estado) {
+        Estado estadoAtual = estadoRepository.findById(estadoId).orElse(null);
+
+        if (estadoAtual != null) {
+            BeanUtils.copyProperties(estado, estadoAtual, "id");
+
+            estadoAtual = cadastroEstado.salvar(estadoAtual);
+            return ResponseEntity.ok(estadoAtual);
         }
+
+        return ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{estadoId}")

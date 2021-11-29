@@ -13,11 +13,24 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class CadastroCidadeService {
-    @Autowired
-    private CidadeRepository cidadeRepository;
 
+    private CidadeRepository cidadeRepository;
+    private EstadoRepository estadoRepository;
+    @Autowired
+    public CadastroCidadeService(CidadeRepository cidadeRepository, EstadoRepository estadoRepository) {
+        this.cidadeRepository = cidadeRepository;
+        this.estadoRepository = estadoRepository;
+    }
 
     public Cidade salvar(Cidade cidade) {
+        Long estadoId = cidade.getEstado().getId();
+
+        Estado estado = estadoRepository.findById(estadoId)
+                .orElseThrow(() -> new EntidadeNaoEncontradaException(
+                        String.format("Não existe cadastro de estado com código %d", estadoId)));
+
+        cidade.setEstado(estado);
+
         return cidadeRepository.save(cidade);
     }
 
