@@ -16,6 +16,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
+
 @Controller
 @ResponseBody//Indica que a resposta dos metodos deve ser enviada como resposta da requisição HTTP
 @RequestMapping("/cozinhas")//Posso adicionar o MediaType.APPLICATION_JSON_VALUE na classe toda. é só atribuir o (value = "/cozinha, produces = ")
@@ -31,14 +33,14 @@ public class CozinhaController {
 
     @GetMapping(/*produces = MediaType.APPLICATION_JSON_VALUE*/)//Faz o metodo só retornar em Json
     public List<Cozinha> listar() {
-        return cozinhaRepository.listar();
+        return cozinhaRepository.findAll();
     }
     //@ResponseStatus(HttpStatus.CREATED)//Altera o código do Status HTTP
     @GetMapping("/{cozinhaId}")
     public ResponseEntity<Cozinha> buscar(@PathVariable("cozinhaId") Long id) throws Exception{ //Oo PathVariable é usado para mostrar qual Long id deve ser utilizado
-        Cozinha cozinha = cozinhaRepository.buscar(id);
-        if (cozinha != null) {
-            return ResponseEntity.ok(cozinha);
+        Optional<Cozinha> cozinha = cozinhaRepository.findById(id);
+        if (cozinha.isPresent()) {
+            return ResponseEntity.ok(cozinha.get());
         }
 
         //return ResponseEntity.status(HttpStatus.OK).body(cozinha);
@@ -52,12 +54,12 @@ public class CozinhaController {
     }
     @PutMapping("/{cozinhaId}")
     public ResponseEntity<Cozinha> atualizar(@PathVariable Long cozinhaId, @RequestBody Cozinha cozinha){
-        Cozinha cozinhaAtual = cozinhaRepository.buscar(cozinhaId);
-        if(cozinhaAtual != null){
+        Optional<Cozinha> cozinhaAtual = cozinhaRepository.findById(cozinhaId);
+        if(cozinhaAtual.isPresent()){
             //cozinhaAtual.setNome(cozinha.getNome()); Não é a melhor forma, já que se tivesse 10 atributos teria que fazer 10 setters
-            BeanUtils.copyProperties(cozinha, cozinhaAtual, "id"); //Já esse metodo copia todas os atibutos de cozinha e joga em cozinhaAtual
-            cozinhaAtual = cadastroCozinha.salvar(cozinhaAtual);
-            return ResponseEntity.ok(cozinhaAtual);
+            BeanUtils.copyProperties(cozinha, cozinhaAtual.get(), "id"); //Já esse metodo copia todas os atibutos de cozinha e joga em cozinhaAtual
+             Cozinha cozinhaSalva = cadastroCozinha.salvar(cozinhaAtual.get());
+            return ResponseEntity.ok(cozinhaSalva);
         }
         return ResponseEntity.notFound().build();//Me retorna 404
     }
@@ -78,6 +80,6 @@ public class CozinhaController {
 
     @GetMapping(produces = MediaType.APPLICATION_XML_VALUE)
     public CozinhasXmlWrapper listarxml(){
-        return new CozinhasXmlWrapper(cozinhaRepository.listar());
+        return new CozinhasXmlWrapper(cozinhaRepository.findAll());
     }
 }

@@ -2,13 +2,13 @@ package com.algaworks.algafoodapi.domain.repository;
 
 import com.algaworks.algafoodapi.domain.model.Cozinha;
 import com.algaworks.algafoodapi.domain.model.Restaurante;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
+@Repository
+public interface CozinhaRepository extends JpaRepository<Cozinha, Long> { //JpaRepository é uma interface com muitos metodos prontos
 
-public interface CozinhaRepository {
-    List<Cozinha> listar();
-    List<Cozinha> consultarPorNome(String nome);
-    Cozinha buscar(Long id);
-    Cozinha salvar(Cozinha cozinha);
-    void remover(Long id);
+    //List<Cozinha> consultarPorNome(String nome);
+
 }
