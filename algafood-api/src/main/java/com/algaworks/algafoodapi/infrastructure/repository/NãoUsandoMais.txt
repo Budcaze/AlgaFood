@@ -1,0 +1,2 @@
+Não vamos mais usar as classes de implementação dos repositórios, já que, agora vamos usar a JpaRepository, que já implementa
+tudo que vamos precisar. Caso seja preciso criar um novo método, então a gente cria um service pra isso.

@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/cidades")
@@ -27,14 +28,14 @@ public class CidadeController {
 
     @GetMapping
     public List<Cidade> listar(){
-        return cidadeRepository.listar();
+        return cidadeRepository.findAll();
     }
 
     @GetMapping("/{cidadeId}")
     public ResponseEntity<Cidade> buscar(@PathVariable Long cidadeId){
-        Cidade cidade = cidadeRepository.buscar(cidadeId);
-        if(cidade != null){
-            return ResponseEntity.ok(cidade);
+        Optional<Cidade> cidade = cidadeRepository.findById(cidadeId);
+        if(cidade.isPresent()){
+            return ResponseEntity.ok(cidade.get());
         }
         return ResponseEntity.notFound().build();
     }
@@ -46,12 +47,12 @@ public class CidadeController {
 
     @PutMapping("/{cidadeId}")
     public ResponseEntity<Cidade> atualizar(@PathVariable Long cidadeId, @RequestBody Cidade cidade){
-        Cidade cidadeAtual = cidadeRepository.buscar(cidadeId);
-        if(cidadeAtual != null){
+        Optional<Cidade> cidadeAtual = cidadeRepository.findById(cidadeId);
+        if(cidadeAtual.isPresent()){
             //cozinhaAtual.setNome(cozinha.getNome()); Não é a melhor forma, já que se tivesse 10 atributos teria que fazer 10 setters
-            BeanUtils.copyProperties(cidade, cidadeAtual, "id"); //Já esse metodo copia todas os atibutos de cozinha e joga em cozinhaAtual
-            cidadeAtual = cadastroCidade.salvar(cidadeAtual);
-            return ResponseEntity.ok(cidadeAtual);
+            BeanUtils.copyProperties(cidade, cidadeAtual.get(), "id"); //Já esse metodo copia todas os atibutos de cozinha e joga em cozinhaAtual
+           Cidade cidadeSalva = cadastroCidade.salvar(cidadeAtual.get());
+            return ResponseEntity.ok(cidadeSalva);
         }
         return ResponseEntity.notFound().build();//Me retorna 404
     }
