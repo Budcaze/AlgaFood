@@ -16,8 +16,8 @@ import java.util.List;
 public class TestControlleer {
     @Autowired
     private CozinhaRepository cozinhaRepository;
-//    @GetMapping("/cozinhas/por-nome")
-//    public List<Cozinha> cozinhasPorNome(@RequestParam("nome") String nome) { //O RequestParam utiliza a ideia de passar como parametro o nome na Requisição HTTP
-//        return cozinhaRepository.consultarPorNome(nome);
-//    }
+    @GetMapping("/cozinhas/por-nome")
+    public List<Cozinha> cozinhasPorNome(@RequestParam("nome") String nome) { //O RequestParam utiliza a ideia de passar como parametro o nome na Requisição HTTP
+        return cozinhaRepository.findBynome(nome); //Quando usa o findBy-Ai aqui coloca o nome que vc quer- o SpringDataJpa entende o metodo
+    }
 }
