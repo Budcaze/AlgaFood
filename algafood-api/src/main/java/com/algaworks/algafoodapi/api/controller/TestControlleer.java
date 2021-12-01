@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/teste")
@@ -28,5 +29,13 @@ public class TestControlleer {
     @GetMapping("/restaurantes/por-taxa-frete")
     public List<Restaurante> restaurantePorTaxaFrete(BigDecimal taxaInicial, BigDecimal taxaFinal) {
         return restauranteRepository.findByTaxaFreteBetween(taxaInicial, taxaFinal);
+    }
+    @GetMapping("/restaurantes/primeiro-por-nome")
+    public Optional<Restaurante> restaurantePorTaxaFrete(String nome) {
+        return restauranteRepository.findFirstByNomeContaining(nome);
+    }
+    @GetMapping("/restaurantes/top-2")
+    public List<Restaurante> restaurantesTop2(String nome) {
+        return restauranteRepository.findTop2ByNomeContaining(nome);
     }
 }

@@ -1,7 +1,11 @@
 insert into cozinha (nome) values ('Brasileira')
 insert into cozinha (nome) values ('Mexicana')
+insert into cozinha (nome) values ('Americana')
+insert into cozinha (nome) values ('Australiana')
 insert into restaurante (nome, taxa_frete, cozinha_id) values ('Arena do sabor', 10, 1)
 insert into restaurante (nome, taxa_frete, cozinha_id) values ('ChinaInBox', 20, 2)
+insert into restaurante (nome, taxa_frete, cozinha_id) values ('Tios Sans', 50, 3)
+insert into restaurante (nome, taxa_frete, cozinha_id) values ('Cangurus', 70, 4)
 
 insert into estado (id, nome) values (1, 'Minas Gerais');
 insert into estado (id, nome) values (2, 'São Paulo');
