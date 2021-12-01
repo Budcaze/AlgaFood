@@ -26,6 +26,14 @@ public class TestControlleer {
     public List<Cozinha> cozinhasPorNome(@RequestParam("nome") String nome) { //O RequestParam utiliza a ideia de passar como parametro o nome na Requisição HTTP
         return cozinhaRepository.findBynome(nome);
     }
+    @GetMapping("/cozinhas/existe")
+    public boolean cozinhaExist(String nome){
+        return cozinhaRepository.existsByNome(nome);
+    }
+    @GetMapping("/restaurantes/count-por-cozinha")
+    public int restaurantesCountPorCozinha(Long cozinhaId) {
+        return restauranteRepository.countByCozinhaId(cozinhaId);
+    }
     @GetMapping("/restaurantes/por-taxa-frete")
     public List<Restaurante> restaurantePorTaxaFrete(BigDecimal taxaInicial, BigDecimal taxaFinal) {
         return restauranteRepository.findByTaxaFreteBetween(taxaInicial, taxaFinal);
@@ -38,4 +46,5 @@ public class TestControlleer {
     public List<Restaurante> restaurantesTop2(String nome) {
         return restauranteRepository.findTop2ByNomeContaining(nome);
     }
+
 }
