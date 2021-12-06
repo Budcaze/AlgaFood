@@ -6,6 +6,7 @@ import com.algaworks.algafoodapi.domain.repository.CozinhaRepository;
 import com.algaworks.algafoodapi.domain.repository.RestauranteRepository;
 import com.algaworks.algafoodapi.infrastructure.repository.spec.RestauranteComFreteGratisSpec;
 import com.algaworks.algafoodapi.infrastructure.repository.spec.RestauranteComNomeSemelhanteSpec;
+import static com.algaworks.algafoodapi.infrastructure.repository.spec.RestauranteSpecs.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -60,10 +61,7 @@ public class TestControlleer {
     }
     @GetMapping("/restaurantes/frete-gratis")
     public List<Restaurante> restaurantesComFreteGratis(String nome){
-        var comFreteGratis = new RestauranteComFreteGratisSpec();
-        var comNomeSemelhante = new RestauranteComNomeSemelhanteSpec(nome);
-
-        return restauranteRepository.findAll(comFreteGratis.and(comNomeSemelhante));
+        return restauranteRepository.findComFreteGratis(nome);
     }
 
 }
