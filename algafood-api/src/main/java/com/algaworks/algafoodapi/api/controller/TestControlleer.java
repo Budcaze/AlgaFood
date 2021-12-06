@@ -29,6 +29,10 @@ public class TestControlleer {
     public List<Cozinha> cozinhasPorNome(@RequestParam("nome") String nome) { //O RequestParam utiliza a ideia de passar como parametro o nome na Requisição HTTP
         return cozinhaRepository.findBynome(nome);
     }
+    @GetMapping("/cozinhas/primeiro")
+    public Optional<Cozinha> CozinhaPrimeiro(){
+        return cozinhaRepository.buscarPrimeiro();
+    }
     @GetMapping("/restaurantes/por-nome")
     public List<Restaurante> restaurantesPorNome(
             String nome, Long cozinhaId) {
@@ -62,6 +66,10 @@ public class TestControlleer {
     @GetMapping("/restaurantes/frete-gratis")
     public List<Restaurante> restaurantesComFreteGratis(String nome){
         return restauranteRepository.findComFreteGratis(nome);
+    }
+    @GetMapping("/restaurantes/primeiro")
+    public Optional<Restaurante> restaurantesPrimeiro(){
+        return restauranteRepository.buscarPrimeiro();
     }
 
 }
