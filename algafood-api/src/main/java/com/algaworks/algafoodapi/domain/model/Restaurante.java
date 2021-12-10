@@ -8,6 +8,8 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -24,5 +26,13 @@ public class Restaurante {
     @ManyToOne
     @JoinColumn(name = "cozinha_id", nullable = false)//Caso eu queira alterar o nome
     private Cozinha cozinha;
+    @ManyToMany //Muitos Restaurantes para muitos formaPagamento
+    @JoinTable(name = "restaurante_forma_pagamento", joinColumns = @JoinColumn(name = "restaurante_id"),
+    inverseJoinColumns = @JoinColumn(name = "forma_pagamento_id"))
+    private List<FormaPagamento> formaPagamentoList = new ArrayList<>();
 
 }
+/*
+* joinColumns é o restaurante
+* inverseJoinColumns é o formaPagamento
+* */
