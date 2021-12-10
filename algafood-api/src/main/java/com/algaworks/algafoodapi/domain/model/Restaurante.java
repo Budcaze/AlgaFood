@@ -26,6 +26,7 @@ public class Restaurante {
     @ManyToOne
     @JoinColumn(name = "cozinha_id", nullable = false)//Caso eu queira alterar o nome
     private Cozinha cozinha;
+    @JsonIgnore
     @ManyToMany //Muitos Restaurantes para muitos formaPagamento
     @JoinTable(name = "restaurante_forma_pagamento", joinColumns = @JoinColumn(name = "restaurante_id"),
     inverseJoinColumns = @JoinColumn(name = "forma_pagamento_id"))
