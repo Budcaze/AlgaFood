@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 @JsonRootName("cozinha")//Altera o nome da classe quando for mostrada no postman. Obs, apenas XML
 @Data//Get, set, equals e hashcode, contrutor
@@ -23,5 +25,8 @@ public class Cozinha {
     //@JsonProperty("titulo")//Altera o nome que será mostrado quando levantar a aplicacao. Obs: Ele tem prioridade sobre o JsonIgnore
     @Column(nullable = false)
     private String nome;
+    @JsonIgnore
+    @OneToMany(mappedBy = "cozinha")
+    private List<Restaurante> restaurantes = new ArrayList<>();
 
 }
