@@ -5,9 +5,12 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -29,6 +32,14 @@ public class Restaurante {
     @JsonIgnore
     @Embedded
     private Endereco endereco;
+    @JsonIgnore
+    @CreationTimestamp //Quando a entidade for criada é pra atribuir a hora atual a ela
+    @Column(nullable = false, columnDefinition = "datetime")
+    private LocalDateTime dataCadastro;
+    @JsonIgnore
+    @UpdateTimestamp//Quando a entidade for atualizada é pra atribuir a hora atual nele
+    @Column(nullable = false, columnDefinition = "datetime")
+    private LocalDateTime dataAtualizacao;
     @JsonIgnore
     @ManyToMany //Muitos Restaurantes para muitos formaPagamento
     @JoinTable(name = "restaurante_forma_pagamento", joinColumns = @JoinColumn(name = "restaurante_id"),
