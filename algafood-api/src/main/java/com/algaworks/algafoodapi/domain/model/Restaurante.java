@@ -26,6 +26,7 @@ public class Restaurante {
     @ManyToOne
     @JoinColumn(name = "cozinha_id", nullable = false)//Caso eu queira alterar o nome
     private Cozinha cozinha;
+    @JsonIgnore
     @Embedded
     private Endereco endereco;
     @JsonIgnore
