@@ -43,7 +43,7 @@ public class Restaurante {
     @UpdateTimestamp//Quando a entidade for atualizada é pra atribuir a hora atual nele
     @Column(nullable = false, columnDefinition = "datetime")
     private LocalDateTime dataAtualizacao;
-    @JsonIgnore
+    //@JsonIgnore
     @ManyToMany //Muitos Restaurantes para muitos formaPagamento
     @JoinTable(name = "restaurante_forma_pagamento", joinColumns = @JoinColumn(name = "restaurante_id"),
     inverseJoinColumns = @JoinColumn(name = "forma_pagamento_id"))
