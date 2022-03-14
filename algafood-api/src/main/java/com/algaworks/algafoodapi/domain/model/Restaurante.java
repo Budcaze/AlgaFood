@@ -1,6 +1,7 @@
 package com.algaworks.algafoodapi.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -26,7 +27,9 @@ public class Restaurante {
     private String nome;
     @Column(name = "taxa_frete", nullable = false)//Faz não aceitar nulo
     private BigDecimal taxaFrete;
-    @ManyToOne
+    //@JsonIgnore
+    @JsonIgnoreProperties("hibernateLazyInitializer")
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cozinha_id", nullable = false)//Caso eu queira alterar o nome
     private Cozinha cozinha;
     @JsonIgnore
@@ -40,7 +43,7 @@ public class Restaurante {
     @UpdateTimestamp//Quando a entidade for atualizada é pra atribuir a hora atual nele
     @Column(nullable = false, columnDefinition = "datetime")
     private LocalDateTime dataAtualizacao;
-    //@JsonIgnore
+    @JsonIgnore
     @ManyToMany //Muitos Restaurantes para muitos formaPagamento
     @JoinTable(name = "restaurante_forma_pagamento", joinColumns = @JoinColumn(name = "restaurante_id"),
     inverseJoinColumns = @JoinColumn(name = "forma_pagamento_id"))
